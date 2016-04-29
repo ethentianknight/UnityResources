@@ -7,19 +7,54 @@ public class PlayerMovement : MonoBehaviour
     public new Rigidbody rigidbody;
     public float movementSpeed = 10f;
     public float turnSmoothing = 2f;
-
+    public GameObject view;
+    //TODO: move this outside of this class
+    public enum Controls { classic, global };
+    public Controls controlScheme;
 
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
+        //TODO: move this outside of this class
+        controlScheme = Controls.global;
     }
 
     void Update()
     {
+        ToggleMovement();
         Move();
     }
 
+    private void ToggleMovement()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            switch (controlScheme)
+            {
+                case Controls.classic:
+                    controlScheme = Controls.global;
+                    break;
+                case Controls.global:
+                    controlScheme = Controls.classic;
+                    break;
+            }
+        }
+    }
+
     private void Move()
+    {
+        switch (controlScheme)
+        {
+            case Controls.classic:
+                MoveClassic();
+                break;
+            case Controls.global:
+                MoveGlobal();
+                break;
+        }
+    }
+
+    private void MoveGlobal()
     {
         var h = GetHorizontalInput();
         var v = GetVerticalInput();
@@ -28,6 +63,29 @@ public class PlayerMovement : MonoBehaviour
             Rotate(h, v);
             transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
         }
+    }
+
+    private void MoveClassic()
+    {
+        if (!KeyPressDown())
+        {
+            MoveGlobal();
+        }
+        else
+        {
+            var h = GetHorizontalInput();
+            var v = GetVerticalInput();
+            if (h != 0 || v != 0)
+            {
+                Rotate(-h, -v);
+                transform.Translate(Vector3.back * movementSpeed * Time.deltaTime);
+            }
+        }
+    }
+
+    private void Move(bool Forward)
+    {
+
     }
 
     private void Rotate(float h, float v)
