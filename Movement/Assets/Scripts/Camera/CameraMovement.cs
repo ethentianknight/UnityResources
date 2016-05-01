@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -26,6 +25,7 @@ public class CameraMovement : MonoBehaviour
 
     void MouseMovement()
     {
+        //TODO: If rotation would go past top of screen, stop it.
         MouseHorizontal();
         MouseVertical();
         transform.position = Target.transform.position - (HorizontalRotation * VerticalRotation * Offset);

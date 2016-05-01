@@ -43,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
+        //TODO: Move relative to camera, not default direction.
         switch (controlScheme)
         {
             case Controls.classic:
@@ -90,8 +91,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void Rotate(float h, float v)
     {
+        Vector3 cameraDir = view.transform.forward;
         Vector3 targetDir = new Vector3(h, 0f, v);
-        Quaternion targetRot = Quaternion.LookRotation(targetDir, Vector3.up);
+        Quaternion targetRot = Quaternion.LookRotation(targetDir, transform.up);
         Quaternion newRot = Quaternion.Lerp(rigidbody.rotation, targetRot, turnSmoothing * Time.deltaTime);
         rigidbody.MoveRotation(newRot);
     }
